@@ -1,7 +1,7 @@
 import 'package:expenses/components/adaptative_button.dart';
+import 'package:expenses/components/adaptative_date_picker.dart';
 import 'package:expenses/components/adaptative_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
   const TransactionForm({
@@ -30,20 +30,6 @@ class _TransactionFormState extends State<TransactionForm> {
     widget.onSubmit(title, value, _selectedDate);
   }
 
-  _showDatePicker() {
-    showDatePicker(
-      context: context, 
-      firstDate: DateTime.now().subtract(Duration(days: 365)), 
-      lastDate: DateTime.now()
-    ).then((pickedDate) {
-      setState(() {
-        if(pickedDate != null) {
-          _selectedDate = pickedDate;
-        }
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -64,27 +50,15 @@ class _TransactionFormState extends State<TransactionForm> {
                     onSubmitted: _submitForm,
                     keyboardType: TextInputType.numberWithOptions(decimal: true),
                   ),
-                  SizedBox(
-                    height: 70,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Data da transação: ${DateFormat('dd/MM/y').format(_selectedDate)}'
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: _showDatePicker, 
-                          child: Text(
-                            'Selecionar data',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.bold
-                            ),
-                          )
-                        )
-                      ],
-                    ),
+                  AdaptativeDatePicker(
+                    selectedDate: _selectedDate, 
+                    onDateChanged: (newDate) {
+                      setState(() {
+                        if(newDate != null) {
+                          _selectedDate = newDate;
+                        }
+                      });
+                    }
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
